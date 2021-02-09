@@ -7,7 +7,8 @@ from utils import FeatureSelection
 
 class LassoSelecion(FeatureSelection):
     """
-    使用Lasso回归进行特征选择, 输入是pandas的DataFrame，为了保留特征的名称，而不是只剩下数字
+    使用Lasso回归进行特征选择, 输入是pandas的DataFrame，此举目的是为了保留特征的名称，而不是只剩下数字，
+    挖掘数据还要求寻求一个可解释性，能方便的知道具体特征的名字至关重要
 
     Examples
     --------

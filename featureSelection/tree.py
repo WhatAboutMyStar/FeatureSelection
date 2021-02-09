@@ -17,8 +17,33 @@ class BaseTree:
         self._regression = regression
         self._model = None
 
+    def setMaxDepth(self, max_depth):
+        self._max_depth = max_depth
+
+    def setMaxFeatures(self, max_features):
+        self._max_features = max_features
+
+    def setMaxLeafNodes(self, max_leaf_nodes):
+        self._max_leaf_nodes = max_leaf_nodes
+
+    def setTopK(self, top_k):
+        self._top_k = top_k
+
 
 class DecisionTreeSelection(FeatureSelection, BaseTree):
+    """
+    使用决策树模型进行特征选择, 输入是pandas的DataFrame，此举目的是为了保留特征的名称，而不是只剩下数字，
+    挖掘数据还要求寻求一个可解释性，能方便的知道具体特征的名字至关重要
+
+    Examples
+    --------
+    >>> dt = DecisionTreeSelection(top_k=5)
+    >>> dt.fit(x_data, y_data)
+    >>> new_data = dt.transform(x_data)
+    >>> dt.columns_
+    >>> dt.feature_importances_
+    >>> dt.keys()
+    """
     def __init__(self,
                  top_k,
                  max_depth=None,
@@ -62,6 +87,19 @@ class DecisionTreeSelection(FeatureSelection, BaseTree):
         return "DecisionTreeSelection()"
 
 class RandomForestSelection(FeatureSelection, BaseTree):
+    """
+    使用随机森林模型进行特征选择, 输入是pandas的DataFrame，此举目的是为了保留特征的名称，而不是只剩下数字，
+    挖掘数据还要求寻求一个可解释性，能方便的知道具体特征的名字至关重要
+
+    Examples
+    --------
+    >>> dt = RandomForestSelection(top_k=5, n_estimators=50, regression=False) #如果是分类模型则将regression设置为False，回归模型设置为True
+    >>> dt.fit(x_data, y_data)
+    >>> new_data = dt.transform(x_data)
+    >>> dt.columns_
+    >>> dt.feature_importances_
+    >>> dt.keys()
+    """
     def __init__(self,
                  top_k,
                  n_estimators=100,
