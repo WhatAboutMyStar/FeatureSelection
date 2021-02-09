@@ -1,9 +1,10 @@
-from utils import FeatureSelection
+from featureSelection.utils import FeatureSelection
 
 class VarianceThreshold(FeatureSelection):
     """
     通过特征的方差来选取特征，需要设定一个阈值，方差小于阈值则丢弃该特征，方差大于阈值则留下特征
     输入是一个pandas的DataFrame，此举目的是为了保留特征的名称，而不是只剩下数字，挖掘数据还要求寻求一个可解释性，能方便的知道具体特征的名字至关重要
+
     Examples
     --------
     >>> var = VarianceThreshold(threshold=0.1)

@@ -1,8 +1,7 @@
 import numpy as np
-import pandas as pd
 from sklearn.linear_model import Lasso
 from sklearn.model_selection import GridSearchCV
-from utils import FeatureSelection
+from featureSelection.utils import FeatureSelection
 
 
 class LassoSelecion(FeatureSelection):
@@ -68,7 +67,7 @@ class LassoSelecion(FeatureSelection):
         self.alpha_ = gs.best_params_['alpha']
 
     def __repr__(self):
-        return "LassoSelection()"
+        return "LassoSelection(threshold={})".format(self._threshold)
 
 if __name__ == '__main__':
     from sklearn.datasets import load_boston

@@ -1,5 +1,5 @@
 import numpy as np
-from utils import FeatureSelection, init
+from featureSelection.utils import FeatureSelection
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 
@@ -80,11 +80,15 @@ class DecisionTreeSelection(FeatureSelection, BaseTree):
 
     @property
     def feature_importances_(self):
-        return dict(zip(self._model.feature_importances_[self._index], self.columns_))
+        return dict(zip(self.columns_, self._model.feature_importances_[self._index]))
 
 
     def __repr__(self):
-        return "DecisionTreeSelection()"
+        return "DecisionTreeSelection(top_k={}, max_depth={}, max_features={}, max_leaf_nodes={}, regression={})".format(self._top_k,
+                                                                                                                         self._max_depth,
+                                                                                                                         self._max_features,
+                                                                                                                         self._max_leaf_nodes,
+                                                                                                                         self._regression)
 
 class RandomForestSelection(FeatureSelection, BaseTree):
     """
@@ -142,10 +146,16 @@ class RandomForestSelection(FeatureSelection, BaseTree):
 
     @property
     def feature_importances_(self):
-        return dict(zip(self._model.feature_importances_[self._index], self.columns_))
+        return dict(zip(self.columns_, self._model.feature_importances_[self._index]))
 
     def __repr__(self):
-        return "RandomForestSelection()"
+        return "RandomForestSelection(top_k={}, n_estimators={}, max_depth={}, max_features={}, max_leaf_nodes={}, n_jobs={}, regression={})".format(self._top_k,
+                                                                                                                                                     self._n_estimators,
+                                                                                                                                                     self._max_depth,
+                                                                                                                                                     self._max_features,
+                                                                                                                                                     self._max_leaf_nodes,
+                                                                                                                                                     self._n_jobs,
+                                                                                                                                                     self._regression)
 
 
 if __name__ == '__main__':
@@ -157,6 +167,7 @@ if __name__ == '__main__':
     x_data = pd.DataFrame(x_data)
     print(x_data.shape)
     dt = DecisionTreeSelection(top_k=5)
+    print(dt)
     new_data = dt.fit_transform(x_data, y_data)
     print(new_data.shape)
     print(dt.feature_importances_)
@@ -167,3 +178,4 @@ if __name__ == '__main__':
     print(new_data.shape)
     print(dt.feature_importances_)
     print(dt.keys())
+    print(dt)
