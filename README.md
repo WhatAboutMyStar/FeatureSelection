@@ -1,6 +1,6 @@
 # FeatureSelection
 基于小样本数据挖掘的特征筛选库
-[README_EngLish_Version]()
+[README_EngLish_Version](https://github.com/WhatAboutMyStar/FeatureSelection/blob/main/README-EN.md)
 ### 功能目的
 在数据挖掘的任务中，我们往往想知道数据中的哪些特征对预测的目标有影响，
 以及使用哪些特征在评价指标上有最大的提升。<br>
