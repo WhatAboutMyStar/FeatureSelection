@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.linear_model import Lasso
 from sklearn.model_selection import GridSearchCV
 from featureSelection.utils import FeatureSelection
-
+import statsmodels.api as sm
 
 class LassoSelecion(FeatureSelection):
     """
@@ -27,6 +27,7 @@ class LassoSelecion(FeatureSelection):
         """
         super(LassoSelecion, self).__init__()
         self.coef_ = None
+        self.intercept_ = None
         self.alpha_ = None
         self._threshold = threshold
 
@@ -36,6 +37,7 @@ class LassoSelecion(FeatureSelection):
         lr = Lasso(self.alpha_, max_iter=10000)
         lr.fit(x_data, y_data)
         self.coef_ = lr.coef_
+        self.intercept_ = lr.intercept_
 
         select = (lr.coef_ == 0)            #[0 0 1 1 0 0 1] 为1的部分是要被删除的特征
         ls = np.arange((x_data.shape[1]))   #[0 1 2 3 4 5 6]
@@ -69,6 +71,29 @@ class LassoSelecion(FeatureSelection):
     def __repr__(self):
         return "LassoSelection(threshold={})".format(self._threshold)
 
+class PValueSelection(FeatureSelection):
+    def __init__(self, significant=0.05):
+        super(PValueSelection, self).__init__()
+        self._significant = significant
+        self.pvalues_ = None
+
+    def fit(self, x_data, y_data):
+        est = sm.OLS(y_data, x_data)
+        est = est.fit()
+        self.pvalues_ = est.pvalues[est.pvalues < self._significant]
+        self._index = self.pvalues_.keys()
+        self.columns_ = self._index
+
+    def transform(self, x_data):
+        return x_data[self._index]
+
+    def fit_transform(self, x_data, y_data):
+        self.fit(x_data, y_data)
+        return self.transform(x_data)
+
+    def __repr__(self):
+        return "PValueSelection()"
+
 if __name__ == '__main__':
     from sklearn.datasets import load_boston
     import pandas as pd
@@ -83,3 +108,8 @@ if __name__ == '__main__':
     print(lr.keys())
     print(lr.alpha_)
     print(lr.best_score_)
+
+    lr = PValueSelection(significant=0.05)
+    lr.fit(x_data, y_data)
+    print(lr.pvalues_)
+    print(lr.keys())
